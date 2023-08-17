@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/layout :: layout(~{::title},~{::body})}">
+<head>
+	<title>トップページ!</title>
+</head>
+
+<body>
+	<h1 class="text-center">トップページ</h1>
+	<ul>
+		<li>
+			<a href = "./games/list.html" th:href="@{/games}">ゲーム一覧へ</a>
+		</li>
+	</ul>
+	
+</body>
+
+</html>
