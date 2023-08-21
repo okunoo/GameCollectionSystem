@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/layout :: layout(~{::title},~{::body})}">
+<head>
+	<title>ゲーム一覧</title>
+</head>
+
+<body>
+	<h1>検索ページ</h1>
+	<a href="list.html" th:href="@{/games}">ゲーム一覧へ</a>
+	<a href="./creationForm.html" th:href="@{/games/creationForm}">ゲームの追加</a>
+	
+	<form th:object = "${searchForm}" th:action = "@{/games/search}" method="get" class="form-inline" >
+		<div class="form-group mx-sm-3 mb-2 pt-3">
+			<input type="text" th:field="*{searchSummary}" class="form-control" placeholder="キーワードを入力">
+		</div>
+		
+		<div class="form-group mx-sm-3 mb-2">
+        <select th:field="*{selectedGenre}" class="form-control">
+            <option value="">ジャンルを選択</option>
+            <option th:each="genre : ${genreOptions}" th:value="${genre}" th:text="${genre}"></option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+    
+	</form>	
+<!--検索結果を表示-->
+<table class="table">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Summary</th>
+			<th>Genre</th>
+			<th></th>
+		</tr>
+	</thead>
+	
+	<tbody>
+		<tr th:each="game : ${gameList}">
+			<td th:text="${game.id}"></td>
+			<td th:text="${game.summary}"></td>
+			<td th:text="${game.genre}"></td>
+			
+			
+				<th>
+					<a class="btn btn-success" th:href="@{/games/edit(id=*{game.id})}">編集</a>
+
+				</th>
+				
+				<th>
+					<form th:action="@{/games/delete}" method="post">
+						<input type="hidden" th:name="id" th:value="${game.id}"/>
+						<button type="submit" class="btn btn-danger">削除</button>
+					</form>
+				</th>
+
+		</tr>
+	</tbody>
+</table>
+
+	<!-- ページネーション -->
+	<div>
+    <ul class="pagination">
+        <li class="page-item" th:if="${currentPage > 0}">
+            <a class="page-link" th:href="@{/games(page=0)}">最初</a>
+        </li>
+        <li class="page-item" th:if="${currentPage > 0}">
+            <a class="page-link" th:href="@{/games(page=${currentPage - 1})}">前へ</a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(currentPage, currentPage + 9)}"　th:if="${i < totalPages}">
+            <a class="page-link" th:href="@{/games(page=${i})}" th:text="${i + 1}"></a>
+        </li>
+        <li class="page-item" th:if="${currentPage < totalPages - 1}">
+            <a class="page-link" th:href="@{/games(page=${currentPage + 1})}">次へ</a>
+        </li>
+        <li class="page-item" th:if="${currentPage < totalPages - 1}">
+            <a class="page-link" th:href="@{/games(page=${totalPages - 1})}">最後</a>
+        </li>
+    </ul>
+</div>
+
+</body>
+
+</html>
