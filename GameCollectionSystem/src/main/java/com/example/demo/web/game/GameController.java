@@ -39,21 +39,22 @@ public class GameController {
 
 	@GetMapping
 	public String showList(Model model, @RequestParam(defaultValue = "0") int page) {
-		int pageSize = 10; // 1ページあたりのデータ数
-		Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").ascending());
-		Page<GameEntity> gamePage = gameService.findAll(pageable);
+	    int pageSize = 10; // 1ページあたりのデータ数
+	    Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").ascending());
+	    Page<GameEntity> gamePage = gameService.findAll(pageable);
 
-		List<GameEntity> gameList = gamePage.getContent();
-		int totalPages = gamePage.getTotalPages();
-		long totalElements = gamePage.getTotalElements(); // 追加: 要素の総数を取得
+	    List<GameEntity> gameList = gamePage.getContent();
+	    int totalPages = gamePage.getTotalPages();
+	    long totalElements = gamePage.getTotalElements(); // 追加: 要素の総数を取得
 
-		model.addAttribute("gameList", gameList);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("totalElements", totalElements); // 追加: 要素の総数をモデルに追加
+	    model.addAttribute("gameList", gameList);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+	    model.addAttribute("totalElements", totalElements); // 追加: 要素の総数をモデルに追加
 
-		return "games/list";
+	    return "games/list";
 	}
+
 
 	@GetMapping("creationForm")
 	public String showCreationForm(Model model) {
@@ -63,20 +64,6 @@ public class GameController {
 		model.addAttribute("gameForm", gameForm);
 		model.addAttribute("genreOptions", genreOptions);
 		return "games/creationForm";
-	}
-
-	@GetMapping("/detail")
-	public String showDetailForm(@RequestParam Long id, Model model) {
-		GameEntity game = gameService.findById(id);
-
-		if (game == null) {
-			return "redirect:/error";
-		}
-
-		model.addAttribute("game", game);
-
-		return "games/detail";
-
 	}
 
 	@GetMapping("/edit")
